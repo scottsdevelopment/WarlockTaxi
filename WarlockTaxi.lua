@@ -1,12 +1,35 @@
 WarlockTaxi = {}
+WarlockTaxi.Network = nil
 
 function WarlockTaxi:JoinNetwork(network)
+    JoinTemporaryChannel(network)
+    WarlockTaxi.Network = network
+    WarlockTaxi:Announce();
 end
 
-function WarlockTaxi:LeaveNetwork(network)
+function WarlockTaxi:Announce()
+    local map = C_Map.GetBestMapForUnit("player");
+    local pos = C_Map.GetPlayerMapPosition(map,"player");
+    local summonerText = "SUMMONER="..tostring(WarlockTaxi:IsValidSummoner())
+    local zoneText = "\""..GetZoneText().."\" \""..GetSubZoneText().."\""
+    local posText = tostring(math.ceil(pos.x*10000)/100)..","..tostring(math.ceil(pos.y*10000)/100)
+    local announce = "HELLO "..summonerText.." "..zoneText.." "..posText
+    WarlockTaxi:Send(announce)
+    return announce
+end
+
+function WarlockTaxi:LeaveNetwork()
+    WarlockTaxi:Send("GOODBYE")
+    LeaveChannelByName(WarlockTaxi.Network)
+end
+
+function WarlockTaxi:Send(message)
+    local channel = GetChannelName(WarlockTaxi.Network)
+    SendChatMessage("WTNÖ "..message, "CHANNEL", nil, channel)
 end
 
 function WarlockTaxi:RegisterSummoner(network)
+    if not WarlockTaxi:IsValidSummoner() then return end
 end
 
 function WarlockTaxi:IsValidSummoner()
