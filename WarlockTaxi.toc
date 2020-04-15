@@ -1,0 +1,8 @@
+## Interface: 11303
+## Title: WarlockTaxi
+## Notes: An addon for summoner networks
+## Version: v0.0
+## Author: Xodious-Whitemane
+## DefaultState: Enabled
+
+WarlockTaxi.lua
