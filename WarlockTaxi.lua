@@ -10,9 +10,9 @@ end
 function WarlockTaxi:Announce()
     local map = C_Map.GetBestMapForUnit("player");
     local pos = C_Map.GetPlayerMapPosition(map,"player");
-    local summonerText = "SUMMONER="..tostring(WarlockTaxi:IsValidSummoner())
-    local zoneText = "\""..GetZoneText().."\" \""..GetSubZoneText().."\""
-    local posText = tostring(math.ceil(pos.x*10000)/100)..","..tostring(math.ceil(pos.y*10000)/100)
+    local summonerText = tostring(WarlockTaxi:IsValidSummoner())
+    local zoneText = string.gsub(GetZoneText()," ","_").." "..string.gsub(GetSubZoneText(), " ", "_")
+    local posText = tostring(math.ceil(pos.x*10000)/100).." "..tostring(math.ceil(pos.y*10000)/100)
     local announce = "HELLO "..summonerText.." "..zoneText.." "..posText
     WarlockTaxi:Send(announce)
     return announce
@@ -24,7 +24,9 @@ function WarlockTaxi:LeaveNetwork()
 end
 
 function WarlockTaxi:Send(message)
+    if WarlockTaxi.Network == nil then return end
     local channel = GetChannelName(WarlockTaxi.Network)
+    if channel == nil then return end
     SendChatMessage("WTNÖ "..message, "CHANNEL", nil, channel)
 end
 
